@@ -1,0 +1,8 @@
+[medsam2] 加载成功: configs/sam2.1/sam2.1_hiera_t.yaml (0s, device=cpu)
+    ... 50/250 图 (1.0s/图, 预计剩余 3 分钟)
+    ... 100/250 图 (1.1s/图, 预计剩余 3 分钟)
+    ... 150/250 图 (1.1s/图, 预计剩余 2 分钟)
+    ... 200/250 图 (1.1s/图, 预计剩余 1 分钟)
+    ... 250/250 图 (1.1s/图, 预计剩余 0 分钟)
+[eval] multi_doctor_ns: Dice@1=0.858 Dice@3=0.870 成功@0.85=95.6% ATTC@0.85=2.44 (262.5s)
+[saved] D:\Huatuo\MedSAM2\outputs\isic_multidoctor_ns.json

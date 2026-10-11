@@ -1,0 +1,11 @@
+[medsam2] 加载成功: configs/sam2.1/sam2.1_hiera_t.yaml (0s, device=cpu)
+    ... 50/100 图 (1.3s/图, 预计剩余 1 分钟)
+    ... 100/100 图 (1.3s/图, 预计剩余 0 分钟)
+[eval] bc_policy: Dice@1=0.900 Dice@3=0.900 成功@0.85=87.0% ATTC@0.85=2.34 (130.9s)
+    ... 50/100 图 (2.1s/图, 预计剩余 2 分钟)
+    ... 100/100 图 (2.1s/图, 预计剩余 0 分钟)
+[eval] single_click: Dice@1=0.900 Dice@3=0.900 成功@0.85=83.0% ATTC@0.85=2.70 (206.6s)
+    ... 50/100 图 (2.1s/图, 预计剩余 2 分钟)
+    ... 100/100 图 (2.2s/图, 预计剩余 0 分钟)
+[eval] simulated_doctor: Dice@1=0.900 Dice@3=0.908 成功@0.85=92.0% ATTC@0.85=1.97 (218.3s)
+[saved] D:\Huatuo\MedSAM2\outputs\episodes_kvasir_rgb.json

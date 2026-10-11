@@ -1,0 +1,166 @@
+
+========== [1/6] 数据 ==========
+[data/isic2018_rgb_rule] 共 1300 张: 替身 0 | 轨迹 1000 | 评测 250, 肿瘤面积占比中位数 0.189
+
+========== [2/6] 分割后端 ==========
+[medsam2] 加载成功: configs/sam2.1/sam2.1_hiera_t.yaml (0s, device=cpu)
+
+========== [3/6] 图像嵌入缓存 (策略网络视觉特征) ==========
+[embeds] 嵌入分支启用: 256 通道 @ 16x16
+
+========== [4/6] 多轮 DAgger 轨迹收集 ==========
+    ... 50/1000 图 (1.0s/图, 预计剩余 15 分钟)
+    ... 100/1000 图 (1.0s/图, 预计剩余 15 分钟)
+    ... 150/1000 图 (1.0s/图, 预计剩余 14 分钟)
+    ... 200/1000 图 (1.0s/图, 预计剩余 13 分钟)
+    ... 250/1000 图 (1.0s/图, 预计剩余 12 分钟)
+    ... 300/1000 图 (1.0s/图, 预计剩余 11 分钟)
+    ... 350/1000 图 (1.0s/图, 预计剩余 11 分钟)
+    ... 400/1000 图 (1.0s/图, 预计剩余 10 分钟)
+    ... 450/1000 图 (1.0s/图, 预计剩余 9 分钟)
+    ... 500/1000 图 (1.0s/图, 预计剩余 8 分钟)
+    ... 550/1000 图 (1.0s/图, 预计剩余 7 分钟)
+    ... 600/1000 图 (1.0s/图, 预计剩余 7 分钟)
+    ... 650/1000 图 (1.0s/图, 预计剩余 6 分钟)
+    ... 700/1000 图 (1.0s/图, 预计剩余 5 分钟)
+    ... 750/1000 图 (1.0s/图, 预计剩余 4 分钟)
+    ... 800/1000 图 (1.0s/图, 预计剩余 3 分钟)
+    ... 850/1000 图 (1.0s/图, 预计剩余 2 分钟)
+    ... 900/1000 图 (1.0s/图, 预计剩余 2 分钟)
+    ... 950/1000 图 (1.0s/图, 预计剩余 1 分钟)
+    ... 1000/1000 图 (1.0s/图, 预计剩余 0 分钟)
+[collect] 专家轨迹: 1000 回合, 平均交互 2.32, 最终 Dice 0.909, 结束原因 {'max_clicks': 85, 'satisfied': 915}
+[collect] 状态-动作样本: 2317
+
+---- 训练 round0 (样本轮次: 1) ----
+[bc] 样本 train=2003 val=314 (点击 1317, 确认 1000; 嵌入分支 开)
+[bc-pretrain] epoch 1: mask BCE=0.2398
+[bc-pretrain] epoch 2: mask BCE=0.1494
+[bc-pretrain] epoch 3: mask BCE=0.1247
+[bc-pretrain] epoch 4: mask BCE=0.1171
+[bc-pretrain] epoch 5: mask BCE=0.1091
+[bc-pretrain] epoch 6: mask BCE=0.1065
+[bc-pretrain] epoch 7: mask BCE=0.0993
+[bc-pretrain] epoch 8: mask BCE=0.0954
+[bc-click-pretrain] epoch 1: click BCE=1.3228
+[bc-click-pretrain] epoch 2: click BCE=0.9788
+[bc-click-pretrain] epoch 3: click BCE=0.9080
+[bc-click-pretrain] epoch 4: click BCE=0.8853
+[bc] 输入通道=13 (彩色) 亚格子偏移头=开
+[bc] epoch 01 loss=2.0153 val_loss=0.7775 val_heat=0.0854 val_diceMAE=0.405 val_acc(±1格)=0.470
+[bc] epoch 02 loss=1.2375 val_loss=0.7352 val_heat=0.0779 val_diceMAE=0.406 val_acc(±1格)=0.498
+[bc] epoch 03 loss=1.0047 val_loss=0.7197 val_heat=0.0737 val_diceMAE=0.406 val_acc(±1格)=0.554
+[bc] epoch 04 loss=0.8924 val_loss=0.6902 val_heat=0.0734 val_diceMAE=0.406 val_acc(±1格)=0.550
+[bc] epoch 05 loss=0.8378 val_loss=0.6728 val_heat=0.0707 val_diceMAE=0.407 val_acc(±1格)=0.554
+[bc] epoch 06 loss=0.8084 val_loss=0.6497 val_heat=0.0699 val_diceMAE=0.408 val_acc(±1格)=0.561
+[bc] epoch 07 loss=0.7871 val_loss=0.6346 val_heat=0.0692 val_diceMAE=0.407 val_acc(±1格)=0.545
+[bc] epoch 08 loss=0.7643 val_loss=0.6180 val_heat=0.0701 val_diceMAE=0.408 val_acc(±1格)=0.604
+[bc] epoch 09 loss=0.7532 val_loss=0.6343 val_heat=0.0694 val_diceMAE=0.407 val_acc(±1格)=0.570
+[bc] epoch 10 loss=0.7505 val_loss=0.6701 val_heat=0.0706 val_diceMAE=0.408 val_acc(±1格)=0.536
+[bc] epoch 11 loss=0.7399 val_loss=0.6318 val_heat=0.0703 val_diceMAE=0.406 val_acc(±1格)=0.574
+[bc] epoch 12 loss=0.7296 val_loss=0.5975 val_heat=0.0705 val_diceMAE=0.407 val_acc(±1格)=0.589
+[bc] epoch 13 loss=0.7346 val_loss=0.5886 val_heat=0.0687 val_diceMAE=0.408 val_acc(±1格)=0.589
+[bc] epoch 14 loss=0.7184 val_loss=0.5727 val_heat=0.0682 val_diceMAE=0.406 val_acc(±1格)=0.571
+[bc] epoch 15 loss=0.7162 val_loss=0.5942 val_heat=0.0697 val_diceMAE=0.406 val_acc(±1格)=0.569
+[bc] epoch 16 loss=0.7212 val_loss=0.5657 val_heat=0.0695 val_diceMAE=0.406 val_acc(±1格)=0.560
+[bc] epoch 17 loss=0.7138 val_loss=0.5678 val_heat=0.0706 val_diceMAE=0.407 val_acc(±1格)=0.557
+[bc] epoch 18 loss=0.7007 val_loss=0.5608 val_heat=0.0699 val_diceMAE=0.406 val_acc(±1格)=0.573
+[bc] epoch 19 loss=0.6937 val_loss=0.5993 val_heat=0.0711 val_diceMAE=0.407 val_acc(±1格)=0.569
+[bc] epoch 20 loss=0.6937 val_loss=0.5791 val_heat=0.0717 val_diceMAE=0.407 val_acc(±1格)=0.582
+[bc] early stop
+[bc] 停止阈值校准: tau=0.610 (val F0.5=0.804, stop 占比 47.8%)
+[bc] dice_theta 校准: 0.441 (val F0.5=0.530) -> stop_mode=classifier
+[bc] 保存 -> D:\Huatuo\MedSAM2\outputs\bc_policy.pt
+    ... 50/150 图 (1.0s/图, 预计剩余 2 分钟)
+    ... 100/150 图 (1.1s/图, 预计剩余 1 分钟)
+    ... 150/150 图 (1.1s/图, 预计剩余 0 分钟)
+[select] round0: val 任务成功率=94.7%
+    ... 50/1000 图 (1.0s/图, 预计剩余 16 分钟)
+    ... 100/1000 图 (1.0s/图, 预计剩余 15 分钟)
+    ... 150/1000 图 (1.0s/图, 预计剩余 14 分钟)
+    ... 200/1000 图 (1.0s/图, 预计剩余 13 分钟)
+    ... 250/1000 图 (1.0s/图, 预计剩余 12 分钟)
+    ... 300/1000 图 (1.0s/图, 预计剩余 11 分钟)
+    ... 350/1000 图 (1.0s/图, 预计剩余 11 分钟)
+    ... 400/1000 图 (1.0s/图, 预计剩余 10 分钟)
+    ... 450/1000 图 (1.0s/图, 预计剩余 9 分钟)
+    ... 500/1000 图 (1.0s/图, 预计剩余 8 分钟)
+    ... 550/1000 图 (1.0s/图, 预计剩余 7 分钟)
+    ... 600/1000 图 (1.0s/图, 预计剩余 7 分钟)
+    ... 650/1000 图 (1.0s/图, 预计剩余 6 分钟)
+    ... 700/1000 图 (1.0s/图, 预计剩余 5 分钟)
+    ... 750/1000 图 (1.0s/图, 预计剩余 4 分钟)
+    ... 800/1000 图 (1.0s/图, 预计剩余 3 分钟)
+    ... 850/1000 图 (1.0s/图, 预计剩余 2 分钟)
+    ... 900/1000 图 (1.0s/图, 预计剩余 2 分钟)
+    ... 950/1000 图 (1.0s/图, 预计剩余 1 分钟)
+    ... 1000/1000 图 (1.0s/图, 预计剩余 0 分钟)
+[collect] DAgger混合轨迹: 1000 回合, 平均交互 2.52, 最终 Dice 0.903, 结束原因 {'max_clicks': 119, 'satisfied': 881}
+[collect] 状态-动作样本: 2516
+
+---- 训练 round1 (样本轮次: 2) ----
+[bc] 样本 train=4142 val=691 (点击 2833, 确认 2000; 嵌入分支 开)
+[bc-pretrain] epoch 1: mask BCE=0.1964
+[bc-pretrain] epoch 2: mask BCE=0.1237
+[bc-pretrain] epoch 3: mask BCE=0.1113
+[bc-pretrain] epoch 4: mask BCE=0.1029
+[bc-pretrain] epoch 5: mask BCE=0.0966
+[bc-pretrain] epoch 6: mask BCE=0.0896
+[bc-pretrain] epoch 7: mask BCE=0.0848
+[bc-pretrain] epoch 8: mask BCE=0.0806
+[bc-click-pretrain] epoch 1: click BCE=1.3097
+[bc-click-pretrain] epoch 2: click BCE=0.9692
+[bc-click-pretrain] epoch 3: click BCE=0.9012
+[bc-click-pretrain] epoch 4: click BCE=0.8820
+[bc] 输入通道=13 (彩色) 亚格子偏移头=开
+[bc] epoch 01 loss=1.5962 val_loss=0.7471 val_heat=0.0837 val_diceMAE=0.404 val_acc(±1格)=0.484
+[bc] epoch 02 loss=0.9584 val_loss=0.7112 val_heat=0.0789 val_diceMAE=0.403 val_acc(±1格)=0.498
+[bc] epoch 03 loss=0.8557 val_loss=0.6836 val_heat=0.0787 val_diceMAE=0.403 val_acc(±1格)=0.519
+[bc] epoch 04 loss=0.8063 val_loss=0.6624 val_heat=0.0780 val_diceMAE=0.402 val_acc(±1格)=0.497
+[bc] epoch 05 loss=0.7731 val_loss=0.6392 val_heat=0.0785 val_diceMAE=0.402 val_acc(±1格)=0.501
+[bc] epoch 06 loss=0.7439 val_loss=0.5992 val_heat=0.0802 val_diceMAE=0.402 val_acc(±1格)=0.537
+[bc] epoch 07 loss=0.7112 val_loss=0.5817 val_heat=0.0792 val_diceMAE=0.402 val_acc(±1格)=0.514
+[bc] epoch 08 loss=0.7107 val_loss=0.5690 val_heat=0.0799 val_diceMAE=0.403 val_acc(±1格)=0.513
+[bc] epoch 09 loss=0.6913 val_loss=0.5859 val_heat=0.0815 val_diceMAE=0.402 val_acc(±1格)=0.534
+[bc] epoch 10 loss=0.6813 val_loss=0.5519 val_heat=0.0789 val_diceMAE=0.402 val_acc(±1格)=0.516
+[bc] early stop
+[bc] 停止阈值校准: tau=0.494 (val F0.5=0.701, stop 占比 43.4%)
+[bc] dice_theta 校准: 0.423 (val F0.5=0.503) -> stop_mode=classifier
+[bc] 保存 -> D:\Huatuo\MedSAM2\outputs\bc_policy.pt
+    ... 50/150 图 (1.0s/图, 预计剩余 2 分钟)
+    ... 100/150 图 (1.1s/图, 预计剩余 1 分钟)
+    ... 150/150 图 (1.1s/图, 预计剩余 0 分钟)
+[select] round1: val 任务成功率=94.7%
+[select] 按验证集任务成功率选轮: bc_round0.pt (val 成功率=94.7%)
+
+[collect] 最终训练样本: 4833
+
+========== [5/6] 评测 (四条指标) ==========
+    ... 50/250 图 (0.9s/图, 预计剩余 3 分钟)
+    ... 100/250 图 (0.9s/图, 预计剩余 2 分钟)
+    ... 150/250 图 (0.9s/图, 预计剩余 2 分钟)
+    ... 200/250 图 (0.9s/图, 预计剩余 1 分钟)
+    ... 250/250 图 (0.9s/图, 预计剩余 0 分钟)
+[eval] single_click: Dice@1=0.858 Dice@3=0.858 ATTC=3.92 成功率=70.8%
+    ... 50/250 图 (1.0s/图, 预计剩余 3 分钟)
+    ... 100/250 图 (1.0s/图, 预计剩余 2 分钟)
+    ... 150/250 图 (1.0s/图, 预计剩余 2 分钟)
+    ... 200/250 图 (1.0s/图, 预计剩余 1 分钟)
+    ... 250/250 图 (1.0s/图, 预计剩余 0 分钟)
+[eval] random_doctor: Dice@1=0.858 Dice@3=0.886 ATTC=2.04 成功率=97.6%
+    ... 50/250 图 (1.0s/图, 预计剩余 3 分钟)
+    ... 100/250 图 (1.0s/图, 预计剩余 2 分钟)
+    ... 150/250 图 (1.0s/图, 预计剩余 2 分钟)
+    ... 200/250 图 (1.0s/图, 预计剩余 1 分钟)
+    ... 250/250 图 (1.0s/图, 预计剩余 0 分钟)
+[eval] simulated_doctor: Dice@1=0.858 Dice@3=0.880 ATTC=2.54 成功率=90.4%
+    ... 50/250 图 (1.1s/图, 预计剩余 4 分钟)
+    ... 100/250 图 (1.1s/图, 预计剩余 3 分钟)
+    ... 150/250 图 (1.1s/图, 预计剩余 2 分钟)
+    ... 200/250 图 (1.1s/图, 预计剩余 1 分钟)
+    ... 250/250 图 (1.1s/图, 预计剩余 0 分钟)
+[eval] bc_policy: Dice@1=0.858 Dice@3=0.870 ATTC=2.98 成功率=82.4%
+[report] -> D:\Huatuo\MedSAM2\outputs\report_medsam2.md
+
+========== [6/6] 完成, 用时 3886s ==========
+报告: D:\Huatuo\MedSAM2\outputs\report_isic2018_rgb_rule.md

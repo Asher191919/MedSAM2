@@ -1,0 +1,89 @@
+# ============================================================================
+# 真实数据 + 真 MedSAM2 配置 (CPU 可跑, 用 sam2 图像编码器一次缓存 + 轻量解码)
+# 运行: python scripts/run_all.py --config configs/config_real.yaml
+# ============================================================================
+
+seed: 42
+
+data:
+  image_size: 128
+  grid: 16
+  # 真实数据: Kvasir-SEG 息肉 (scripts/prepare_real_data.py 生成)
+  real_trajectories: null  # 真实医生轨迹 (annotate_record.py 录制); 有值时替代模拟医生 r0
+  external_dir: data/kvasir_seg
+  color: true              # 改进2: 保留 RGB (皮肤镜/内镜颜色是强线索; 状态 11->13 通道)
+  run_name: rgb            # 实验命名空间: 缓存/报告隔离 (灰度旧实验保留在 cache_kvasir_seg/)
+  n_surrogate_train: 0     # 真 MedSAM2 后端, 无需训练替身
+  n_traj: 900              # 专家轨迹图像数 (Kvasir 1000 张的剩余全部, CPU 约 17 分钟)
+  n_eval: 100              # 评测图像数 (CPU 约 8 分钟)
+  synthetic_dir: outputs/synthetic_images
+
+collect:
+  mode: dagger             # expert | dagger: DAgger 用 BC(混合医生) 执行、医生打标签
+  dagger_beta: 0.5         # (兼容旧配置) 单轮执行医生动作的概率
+  dagger_betas: [0.5]      # 单轮 DAgger (对照实验: 与上一轮同轨迹数据)
+
+doctor:
+  init_mode: box           # 真实协议: 先框选(抖动GT框)再点击修正 (内镜标注工作流;
+                           # 实测 MedSAM2 对大而模糊的息肉: 框提示 Dice~0.77 >> 点提示 ~0.39)
+  target_dice: 0.88
+  max_clicks: 10
+  click_jitter: 3.0
+  suboptimal_prob: 0.15
+  init_box_prob: 0.0
+
+surrogate:                 # 未用 (后端为 MedSAM2), 保留默认防止 KeyError
+  base: 16
+  sigma_click: 3.0
+  batch: 16
+  lr: 0.001
+  epochs: 6
+  sim_steps: 3
+  sim_subset: 400
+  val_frac: 0.15
+  init_box_prob: 0.3
+
+policy:
+  batch: 32
+  lr: 0.001
+  epochs: 40
+  patience: 6
+  heatmap_sigma: 0.8
+  stop_weight: 1.0
+  trunk_lr_scale: 0.2
+  flip_augment: true
+  pretrain_epochs: 8       # 真实内镜对比度低, 定位预训练需要更多轮
+  dual_mode: false          # 实验结论: 双修正在当前数据量下 76% < 单动作 79-82%, 关闭
+                            # (基础设施保留, 见 README 负结果记录)
+  stop_mode: classifier       # 实验结论: Dice 回归停手两轮均劣于 F0.5 分类器 (79 vs 82)
+  dice_loss_weight: 0.0       # 实验结论: 辅助 Dice 回归损失亦无增益 (79 vs 82), 关闭
+  click_pretrain_epochs: 4 # 点击定位专项预训练 (扰动合成监督, 不需要轨迹)
+  click_pretrain_samples: 3000
+  fine_offset: true         # 改进3: 亚格子点击偏移头 (32x32 特征, 点击精度 8px->4px)
+  offset_weight: 0.5        # 偏移头损失权重 (只在点击定位预训练中监督)
+  rl_finetune: true        # BC 后 RL 微调 (REINFORCE, Dice 增益奖励)
+  rl_epochs: 2
+  rl_images: 500           # 每轮 RL 的回合数 (CPU 约 10 分钟/轮)
+  rl_gamma: 0.9
+  rl_lr: 2e-5
+  rl_temperature: 1.0
+  stop_dice: 0.85
+
+eval:
+  target_dice: 0.85
+  max_clicks: 10
+  candidates: 1             # 测试时候选搜索: 策略提议 top-k, 分割器 predicted-IoU 选优
+  candidate_sep: 2          # 候选间最小网格距离 (保证候选在不同误差区域)
+  stop_guard: false        # 实测有害: predicted-IoU 噪声大, 连续无提升即停会误停 (71% vs 78%)
+  size_bins: {small: [0.0, 0.33], medium: [0.33, 0.66], large: [0.66, 1.0]}
+
+# 真 MedSAM2: 官方 wanglab/MedSAM2 权重 (经 hf-mirror 下载, CPU 推理)
+medsam2:
+  checkpoint: checkpoints/MedSAM2_latest.pt
+  config_candidates:       # 按序尝试, 取能与权重对上的架构 (pip 包 sam2 自带这些配置)
+    - configs/sam2.1/sam2.1_hiera_t.yaml
+    - configs/sam2.1/sam2.1_hiera_s.yaml
+    - configs/sam2.1/sam2.1_hiera_b+.yaml
+    - sam2.1/sam2.1_hiera_t.yaml
+    - sam2.1/sam2.1_hiera_s.yaml
+  device: auto             # 无 GPU 自动回退 cpu

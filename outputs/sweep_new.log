@@ -1,0 +1,32 @@
+
+================ candidates=1 ================
+[medsam2] 加载成功: configs/sam2.1/sam2.1_hiera_t.yaml (0s, device=cpu)
+[embeds] 载入 D:\Huatuo\MedSAM2\outputs\cache_kvasir_seg_rgb\embeds_eval.npz
+    ... 50/100 图 (1.2s/图, 预计剩余 1 分钟)
+    ... 100/100 图 (1.2s/图, 预计剩余 0 分钟)
+[eval] bc_policy: Dice@1=0.900 Dice@3=0.900 ATTC=2.34 成功率=87.0%
+
+=== bc_policy.pt guard=False candidates=1 ===
+BC: Dice@1=0.900 Dice@3=0.900 ATTC=2.34 成功率=87.0%
+
+================ candidates=2 ================
+[medsam2] 加载成功: configs/sam2.1/sam2.1_hiera_t.yaml (0s, device=cpu)
+[embeds] 载入 D:\Huatuo\MedSAM2\outputs\cache_kvasir_seg_rgb\embeds_eval.npz
+    ... 50/100 图 (1.4s/图, 预计剩余 1 分钟)
+    ... 100/100 图 (1.4s/图, 预计剩余 0 分钟)
+[eval] bc_policy: Dice@1=0.900 Dice@3=0.902 ATTC=2.34 成功率=87.0%
+
+=== bc_policy.pt guard=False candidates=2 ===
+BC: Dice@1=0.900 Dice@3=0.902 ATTC=2.34 成功率=87.0%
+
+================ candidates=3 ================
+[medsam2] 加载成功: configs/sam2.1/sam2.1_hiera_t.yaml (1s, device=cpu)
+[embeds] 载入 D:\Huatuo\MedSAM2\outputs\cache_kvasir_seg_rgb\embeds_eval.npz
+    ... 50/100 图 (1.3s/图, 预计剩余 1 分钟)
+    ... 100/100 图 (1.4s/图, 预计剩余 0 分钟)
+[eval] bc_policy: Dice@1=0.900 Dice@3=0.902 ATTC=2.35 成功率=87.0%
+
+=== bc_policy.pt guard=False candidates=3 ===
+BC: Dice@1=0.900 Dice@3=0.902 ATTC=2.35 成功率=87.0%
+
+[sweep] 全部完成

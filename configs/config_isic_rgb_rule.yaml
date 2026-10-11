@@ -1,0 +1,84 @@
+# ============================================================================
+# 真实数据 + 真 MedSAM2 配置 (CPU 可跑, 用 sam2 图像编码器一次缓存 + 轻量解码)
+# 运行: python scripts/run_all.py --config configs/config_real.yaml
+# ============================================================================
+
+seed: 42
+
+data:
+  image_size: 128
+  grid: 16
+  # 真实数据: ISIC 2018 皮肤病灶 (scripts/prepare_real_data.py --dataset isic2018)
+  real_trajectories: null  # 真实医生轨迹 (annotate_record.py 录制); 有值时替代模拟医生 r0
+  external_dir: data/isic2018
+  color: true              # ④ 零样本迁移: 与 Kvasir 彩色策略同构 (13 通道状态)
+  run_name: rgb_rule       # 对照组命名空间 -> cache_isic2018_rgb_rule/
+  n_surrogate_train: 0     # 真 MedSAM2 后端, 无需训练替身
+  n_traj: 1000             # 专家轨迹图像数 (ISIC 2594 张的子集, CPU 约 20 分钟)
+  n_eval: 250              # 评测图像数 (更大测试集, 噪声更小)
+  synthetic_dir: outputs/synthetic_images
+
+collect:
+  mode: dagger             # expert | dagger: DAgger 用 BC(混合医生) 执行、医生打标签
+  dagger_beta: 0.5         # (兼容旧配置) 单轮执行医生动作的概率
+  dagger_betas: [0.5]      # 单轮 DAgger (对照实验: 与上一轮同轨迹数据)
+
+doctor:
+  init_mode: box           # 真实协议: 先框选(抖动GT框)再点击修正 (内镜标注工作流;
+                           # 实测 MedSAM2 对大而模糊的息肉: 框提示 Dice~0.77 >> 点提示 ~0.39)
+  teacher: rule            # 对照组: 质心规则教师 (与 multi_ns 运行唯一差异)
+  multi_cand: 8            # 每步候选点击数
+  target_dice: 0.88
+  max_clicks: 10
+  click_jitter: 3.0
+  suboptimal_prob: 0.15
+  init_box_prob: 0.0
+
+surrogate:                 # 未用 (后端为 MedSAM2), 保留默认防止 KeyError
+  base: 16
+  sigma_click: 3.0
+  batch: 16
+  lr: 0.001
+  epochs: 6
+  sim_steps: 3
+  sim_subset: 400
+  val_frac: 0.15
+  init_box_prob: 0.3
+
+policy:
+  dual_mode: false          # 零样本评测: 与 Kvasir 出货协议一致 (单动作)
+  batch: 32
+  lr: 0.001
+  epochs: 40
+  patience: 6
+  heatmap_sigma: 0.8
+  stop_weight: 1.0
+  trunk_lr_scale: 0.2
+  flip_augment: true
+  pretrain_epochs: 8       # 真实内镜对比度低, 定位预训练需要更多轮
+  fine_offset: true         # 与 Kvasir RGB 出货协议一致 (亚格子偏移头)
+  offset_weight: 0.5        # 偏移头损失权重 (只在点击定位预训练中监督)
+  stop_mode: classifier     # 负结果回退: Dice 回归停手劣于 F0.5 分类器
+  dice_loss_weight: 0.0     # 负结果回退: 辅助 Dice 回归损失无增益
+  click_pretrain_epochs: 4 # 点击定位专项预训练 (扰动合成监督, 不需要轨迹)
+  click_pretrain_samples: 3000
+  stop_dice: 0.85
+
+eval:
+  target_dice: 0.85
+  max_clicks: 10
+  candidates: 1            # 出货配置: 候选搜索关闭 (彩色策略上无增益, 见 README)
+  candidate_sep: 2
+  stop_guard: false        # 实测有害: predicted-IoU 噪声大, 连续无提升即停会误停 (71% vs 78%)
+  size_bins: {small: [0.0, 0.33], medium: [0.33, 0.66], large: [0.66, 1.0]}
+
+# 真 MedSAM2: 官方 wanglab/MedSAM2 权重 (经 hf-mirror 下载, CPU 推理)
+medsam2:
+  checkpoint: checkpoints/MedSAM2_latest.pt
+  config_candidates:       # 按序尝试, 取能与权重对上的架构 (pip 包 sam2 自带这些配置)
+    - configs/sam2.1/sam2.1_hiera_t.yaml
+    - configs/sam2.1/sam2.1_hiera_s.yaml
+    - configs/sam2.1/sam2.1_hiera_b+.yaml
+    - sam2.1/sam2.1_hiera_t.yaml
+    - sam2.1/sam2.1_hiera_s.yaml
+  device: auto             # 无 GPU 自动回退 cpu

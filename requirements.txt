@@ -1,0 +1,9 @@
+# 与父目录 D:\Huatuo 共用同一环境; 以下为 MedSAM2 子项目依赖
+numpy>=1.26
+torch>=2.2
+pyyaml>=6.0
+matplotlib>=3.8
+pillow>=10.0
+
+# 可选: 真 MedSAM2 后端 (需 GPU)
+# sam2 @ git+https://github.com/facebookresearch/sam2.git

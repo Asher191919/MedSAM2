@@ -1,0 +1,51 @@
+
+================ candidates=1 ================
+[medsam2] 加载成功: configs/sam2.1/sam2.1_hiera_t.yaml (1s, device=cpu)
+[embeds] 载入 D:\Huatuo\MedSAM2\outputs\cache_kvasir_seg\embeds_eval.npz
+    ... 50/100 图 (2.0s/图, 预计剩余 2 分钟)
+    ... 100/100 图 (2.0s/图, 预计剩余 0 分钟)
+[eval] single_click: Dice@1=0.858 Dice@3=0.858 ATTC=4.30 成功率=67.0%
+    ... 50/100 图 (2.2s/图, 预计剩余 2 分钟)
+    ... 100/100 图 (1.8s/图, 预计剩余 0 分钟)
+[eval] random_doctor: Dice@1=0.858 Dice@3=0.881 ATTC=2.51 成功率=90.0%
+    ... 50/100 图 (1.3s/图, 预计剩余 1 分钟)
+    ... 100/100 图 (1.3s/图, 预计剩余 0 分钟)
+[eval] simulated_doctor: Dice@1=0.858 Dice@3=0.883 ATTC=2.45 成功率=91.0%
+    ... 50/100 图 (1.4s/图, 预计剩余 1 分钟)
+    ... 100/100 图 (1.4s/图, 预计剩余 0 分钟)
+[eval] bc_policy: Dice@1=0.858 Dice@3=0.861 ATTC=3.20 成功率=81.0%
+
+=== bc_policy.pt guard=False candidates=1 ===
+BC: Dice@1=0.858 Dice@3=0.861 ATTC=3.20 成功率=81.0%
+
+================ candidates=2 ================
+[medsam2] 加载成功: configs/sam2.1/sam2.1_hiera_t.yaml (0s, device=cpu)
+Traceback (most recent call last):
+  File "D:\Huatuo\MedSAM2\scripts\eval_checkpoint.py", line 84, in <module>
+    main()
+  File "D:\Huatuo\MedSAM2\scripts\eval_checkpoint.py", line 52, in main
+    net.load_state_dict(payload["state_dict"])
+  File "C:\Users\asher\AppData\Local\Programs\Python\Python312\Lib\site-packages\torch\nn\modules\module.py", line 2638, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for InteractionPolicyNet:
+	Missing key(s) in state_dict: "stem.0.0.weight", "stem.0.0.bias", "stem.0.1.weight", "stem.0.1.bias", "stem.0.1.running_mean", "stem.0.1.running_var", "stem.1.0.weight", "stem.1.0.bias", "stem.1.1.weight", "stem.1.1.bias", "stem.1.1.running_mean", "stem.1.1.running_var", "err_head.0.weight", "err_head.0.bias", "err_head.1.weight", "err_head.1.bias", "err_head.1.running_mean", "err_head.1.running_var", "err_head.3.weight", "err_head.3.bias", "offset_head.0.weight", "offset_head.0.bias", "offset_head.1.weight", "offset_head.1.bias", "offset_head.3.weight", "offset_head.3.bias". 
+	Unexpected key(s) in state_dict: "trunk.3.0.weight", "trunk.3.0.bias", "trunk.3.1.weight", "trunk.3.1.bias", "trunk.3.1.running_mean", "trunk.3.1.running_var", "trunk.3.1.num_batches_tracked", "trunk.4.0.weight", "trunk.4.0.bias", "trunk.4.1.weight", "trunk.4.1.bias", "trunk.4.1.running_mean", "trunk.4.1.running_var", "trunk.4.1.num_batches_tracked", "err_head.weight", "err_head.bias". 
+	size mismatch for trunk.0.0.weight: copying a param with shape torch.Size([32, 11, 3, 3]) from checkpoint, the shape in current model is torch.Size([96, 64, 3, 3]).
+	size mismatch for trunk.0.0.bias: copying a param with shape torch.Size([32]) from checkpoint, the shape in current model is torch.Size([96]).
+	size mismatch for trunk.0.1.weight: copying a param with shape torch.Size([32]) from checkpoint, the shape in current model is torch.Size([96]).
+	size mismatch for trunk.0.1.bias: copying a param with shape torch.Size([32]) from checkpoint, the shape in current model is torch.Size([96]).
+	size mismatch for trunk.0.1.running_mean: copying a param with shape torch.Size([32]) from checkpoint, the shape in current model is torch.Size([96]).
+	size mismatch for trunk.0.1.running_var: copying a param with shape torch.Size([32]) from checkpoint, the shape in current model is torch.Size([96]).
+	size mismatch for trunk.1.0.weight: copying a param with shape torch.Size([64, 32, 3, 3]) from checkpoint, the shape in current model is torch.Size([96, 96, 3, 3]).
+	size mismatch for trunk.1.0.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([96]).
+	size mismatch for trunk.1.1.weight: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([96]).
+	size mismatch for trunk.1.1.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([96]).
+	size mismatch for trunk.1.1.running_mean: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([96]).
+	size mismatch for trunk.1.1.running_var: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([96]).
+	size mismatch for trunk.2.0.weight: copying a param with shape torch.Size([96, 64, 3, 3]) from checkpoint, the shape in current model is torch.Size([64, 96, 3, 3]).
+	size mismatch for trunk.2.0.bias: copying a param with shape torch.Size([96]) from checkpoint, the shape in current model is torch.Size([64]).
+	size mismatch for trunk.2.1.weight: copying a param with shape torch.Size([96]) from checkpoint, the shape in current model is torch.Size([64]).
+	size mismatch for trunk.2.1.bias: copying a param with shape torch.Size([96]) from checkpoint, the shape in current model is torch.Size([64]).
+	size mismatch for trunk.2.1.running_mean: copying a param with shape torch.Size([96]) from checkpoint, the shape in current model is torch.Size([64]).
+	size mismatch for trunk.2.1.running_var: copying a param with shape torch.Size([96]) from checkpoint, the shape in current model is torch.Size([64]).
+[fail] candidates=2 退出码 1

@@ -1,0 +1,20 @@
+__pycache__/
+*.pyc
+
+# 大体积产物: 权重 / 数据 / 缓存 (脚本可重建)
+checkpoints/
+data/*
+data_raw/
+_oldcode_run/
+outputs/*
+*.pt
+*.npz
+
+# 白名单: 报告 / 图 / 指标 / 日志 随仓库发布
+!outputs/report_*.md
+!outputs/plot_*.png
+!outputs/eval_results_*.json
+!outputs/*.log
+!outputs/stats_*.md
+!outputs/ablation_*.md
+_patch[0-9]*.py

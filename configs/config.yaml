@@ -1,0 +1,72 @@
+# ============================================================================
+# MedSAM2 + 交互式肿瘤分割模仿学习 - 配置
+# ----------------------------------------------------------------------------
+# 状态 s = 当前图像、当前分割结果、历史点击
+# 动作 a = 下一次点击(正/负=擦除)、框选(专家初始化策略)或确认
+# 目标   = 用尽可能少的交互得到高 Dice 分割
+# ============================================================================
+
+seed: 42
+
+data:
+  image_size: 128          # 图像统一缩放到该尺寸
+  grid: 16                 # 动作网格: 点击位置离散化为 grid x grid (16 -> 8px 精度)
+  # 合成数据数量 (真实数据用 data.external_dir 直接替换, 见 README)
+  n_surrogate_train: 700   # 训练分割替身用的图像
+  n_traj: 1200             # 收集专家轨迹用的图像
+  n_eval: 240              # 最终评测用的图像
+  synthetic_dir: outputs/synthetic_images
+  external_dir: null       # 真实数据: images/ + masks/ 两个子文件夹 (png), 设置后替代合成数据
+
+synthetic:
+  contrast_mean: 0.18      # 肿瘤与周围组织的强度差 (越小越难)
+  contrast_std: 0.08
+  radius_range: [4, 18]    # 肿瘤半径 px
+  noise_std: 0.035
+
+# ------------------------------------------------ 点击条件分割器 (SAM 替身) ----
+surrogate:
+  base: 16                 # U-Net 基础通道
+  sigma_click: 3.0         # 点击高斯展开 σ (px)
+  batch: 16
+  lr: 0.001
+  epochs: 6
+  sim_steps: 3             # 每个 epoch 模拟交互步数 (误差驱动, 用上一轮模型)
+  sim_subset: 400          # 每轮用于模拟交互的图像数 (省 CPU)
+  val_frac: 0.15
+  init_box_prob: 0.3       # 替身训练时初始交互用框选的概率 (让后端两种初始都稳健)
+
+# ------------------------------------------------ 模拟医生 (专家策略) ----
+doctor:
+  init_mode: click         # 合成数据协议: 中心正点击起步 (真实数据用 box, 见 config_real.yaml)
+  target_dice: 0.88        # 医生满意阈值, 达到即"确认"结束
+  max_clicks: 10
+  click_jitter: 3.0        # 点击位置抖动 σ (px)
+  suboptimal_prob: 0.15    # 以该概率在误差区域边缘(次优)点击, 模拟真实医生
+  init_box_prob: 0.0       # 医生轨迹默认从"中心正点击"开始 (框选作为 eval 消融项)
+
+# ------------------------------------------------ 模仿学习 (BC 策略) ----
+policy:
+  dual_mode: false         # 合成管线保持单动作协议 (与替身验证路径一致)
+  batch: 32
+  lr: 0.001
+  epochs: 25
+  patience: 5
+  heatmap_sigma: 0.8        # 点击热图目标的空间 σ (格子单位)
+  stop_weight: 1.0          # 确认分支损失权重 (trunk 已 detach, 不干扰点击特征)
+  trunk_lr_scale: 0.2       # trunk 学习率缩放 (保护定位预训练特征)
+  flip_augment: true        # 状态-标签翻转增强 (水平/垂直)
+  pretrain_epochs: 3        # trunk 肿瘤定位预训练轮数 (第 0 步点击本质是找肿瘤)
+  stop_dice: 0.85           # 参考值(训练时学医生的停止时机)
+
+# ------------------------------------------------ 评测 ----
+eval:
+  target_dice: 0.85        # "达到目标 Dice 所需点击次数"的目标
+  max_clicks: 10
+  size_bins: {small: [0.0, 0.33], medium: [0.33, 0.66], large: [0.66, 1.0]}  # 按肿瘤面积分位
+
+medsam2:
+  # 真 MedSAM2 配置 (可选): 需 GPU + 官方权重, 见 README 与 medsam2il/segmenter/medsam2_adapter.py
+  checkpoint: null         # 例如 checkpoints/MedSAM2.pth
+  cfg_name: configs/sam2.1/sam2.1_hiera_b+.yaml
+  device: cuda
